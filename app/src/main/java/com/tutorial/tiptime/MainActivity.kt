@@ -6,10 +6,10 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.tutorial.tiptime.ui.pages.tipcalculator.TipCalculatorViewModelImplementation
+import com.tutorial.tiptime.ui.pages.tipcalculator.TipCalculator
 import com.tutorial.tiptime.ui.theme.TipTimeTheme
 
 class MainActivity : ComponentActivity() {
@@ -22,25 +22,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    val viewModel: TipCalculatorViewModelImplementation = viewModel()
+                    TipCalculator(viewModel = viewModel)
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    TipTimeTheme {
-        Greeting("Android")
     }
 }
