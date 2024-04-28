@@ -9,7 +9,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tutorial.tiptime.ui.pages.tipcalculator.TipCalculatorViewModelImplementation
-import com.tutorial.tiptime.ui.pages.tipcalculator.TipCalculator
+import com.tutorial.tiptime.ui.pages.tipcalculator.MainPage
 import com.tutorial.tiptime.ui.theme.TipTimeTheme
 
 class MainActivity : ComponentActivity() {
@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val viewModel: TipCalculatorViewModelImplementation = viewModel()
-                    TipCalculator(viewModel = viewModel)
+                    MainPage(viewModel = viewModel)
                 }
             }
         }

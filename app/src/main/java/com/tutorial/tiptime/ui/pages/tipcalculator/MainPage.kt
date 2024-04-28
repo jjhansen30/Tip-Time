@@ -13,6 +13,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -25,15 +27,12 @@ import com.tutorial.tiptime.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TipCalculator(
-    viewModel: TipCalculatorViewModel,
-    topAppBarTitle: String = stringResource(id = R.string.app_name),
-    tipAmountText: String = stringResource(id = R.string.tip_amount),
-    tipAmountFontSize: TextUnit = 32.sp
+fun MainPage(
+    viewModel: TipCalculatorViewModel
 ) {
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text(text = topAppBarTitle) }) },
+        topBar = { TopAppBar(title = { Text(text = stringResource(id = R.string.app_name)) }) },
         modifier = Modifier.padding()
     ) {
         Column(
@@ -44,28 +43,21 @@ fun TipCalculator(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            BillAmountTextView(
+            BillAmount(
                 value = viewModel.getBillAmount(),
                 onValueChange = viewModel::onBillAmountChange,
                 isError = viewModel.getErrorValue(),
-                keyboardActionScope = {viewModel.calculateTip()}
+                keyboardActionScope = { viewModel.calculateTip() }
             )
             Spacer(modifier = Modifier.height(24.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = "$tipAmountText: ",
-                    fontSize = tipAmountFontSize,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "$"+viewModel.getTipAmount(),
-                    fontSize = tipAmountFontSize,
-                    fontWeight = FontWeight.Bold
-                )
-            }
+            CustomTip(
+                onTipChange = viewModel::onTipAmountChange,
+                tipPercentage = viewModel.getTipPercentValue(),
+                onSwitchToggled = viewModel::onSwitchToggled,
+                isSwitchToggled = viewModel.getSwitchToggleValue()
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            TipAmount(tipTotal = viewModel.getTipAmount())
         }
     }
 }
@@ -74,14 +66,21 @@ fun TipCalculator(
 @Preview(showSystemUi = true)
 fun PreviewCalculator() {
     val viewModel = object : TipCalculatorViewModel {
-        override fun getBillAmount(): String = "10.00"
+        override fun getBillAmount(): MutableState<String> = mutableStateOf("Bill Amount")
 
-        override fun getTipAmount(): String = "0.01"
+        override fun getTipAmount(): MutableState<String> = mutableStateOf("0.34")
 
         override fun calculateTip() {}
-        override fun getErrorValue(): Boolean = false
+        override fun getErrorValue(): MutableState<Boolean> = mutableStateOf(false)
 
-        override fun onBillAmountChange(value: String) {}
+        override fun onBillAmountChange(onValueChange: String) {}
+        override fun onTipAmountChange(onValueChange: String) {}
+
+        override fun getTipPercentValue(): MutableState<String> = mutableStateOf("0%")
+
+        override fun onSwitchToggled(toggleValue: Boolean) {}
+
+        override fun getSwitchToggleValue(): MutableState<Boolean> = mutableStateOf(false)
     }
-    TipCalculator(viewModel = viewModel)
+    MainPage(viewModel = viewModel)
 }

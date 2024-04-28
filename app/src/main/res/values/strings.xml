@@ -4,4 +4,6 @@
     <string name="bill_amount">Bill Amount</string>
     <string name="tip_amount">Tip Amount</string>
     <string name="error">Value must be a number</string>
+    <string name="round_up_tip_question">Round up tip?</string>
+    <string name="tip_percentage">Tip Percentage</string>
 </resources>

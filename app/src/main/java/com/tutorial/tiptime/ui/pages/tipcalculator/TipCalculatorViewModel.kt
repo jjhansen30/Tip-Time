@@ -1,16 +1,21 @@
 package com.tutorial.tiptime.ui.pages.tipcalculator
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModel
 import java.util.Locale
 
 interface TipCalculatorViewModel {
-    fun getBillAmount(): String
-    fun getTipAmount(): String
+    fun getBillAmount(): MutableState<String>
+    fun getTipAmount(): MutableState<String>
     fun calculateTip()
-    fun getErrorValue(): Boolean
-    fun onBillAmountChange(value: String)
+    fun getErrorValue(): MutableState<Boolean>
+    fun onBillAmountChange(onValueChange: String)
+    fun onTipAmountChange(onValueChange: String)
+    fun getTipPercentValue(): MutableState<String>
+    fun onSwitchToggled(toggleValue: Boolean)
+    fun getSwitchToggleValue(): MutableState<Boolean>
 }
 
 class TipCalculatorViewModelImplementation: TipCalculatorViewModel, ViewModel() {
@@ -19,12 +24,12 @@ class TipCalculatorViewModelImplementation: TipCalculatorViewModel, ViewModel() 
     private var tipAmount = mutableStateOf("")
     private var isError = mutableStateOf(false)
 
-    override fun getBillAmount(): String {
-        return billAmount.value
+    override fun getBillAmount(): MutableState<String> {
+        return billAmount
     }
 
-    override fun getTipAmount(): String {
-        return tipAmount.value
+    override fun getTipAmount(): MutableState<String> {
+        return tipAmount
     }
 
     override fun calculateTip() {
@@ -42,11 +47,27 @@ class TipCalculatorViewModelImplementation: TipCalculatorViewModel, ViewModel() 
         }
     }
 
-    override fun getErrorValue(): Boolean {
-        return isError.value
+    override fun getErrorValue(): MutableState<Boolean> {
+        return isError
     }
 
-    override fun onBillAmountChange(value: String) {
-        billAmount.value = value
+    override fun onBillAmountChange(onValueChange: String) {
+        billAmount.value = onValueChange
+    }
+
+    override fun onTipAmountChange(onValueChange: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getTipPercentValue(): MutableState<String> {
+        TODO("Not yet implemented")
+    }
+
+    override fun onSwitchToggled(toggleValue: Boolean) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getSwitchToggleValue(): MutableState<Boolean> {
+        TODO("Not yet implemented")
     }
 }
