@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -28,7 +30,9 @@ fun MainPage(
 
     Scaffold(
         topBar = { TopAppBar(title = { Text(text = stringResource(id = R.string.app_name)) }) },
-        modifier = Modifier.padding()
+        modifier = Modifier
+            .padding()
+            .verticalScroll(rememberScrollState())
     ) {
         Column(
             modifier = Modifier
@@ -41,15 +45,15 @@ fun MainPage(
             BillAmount(
                 value = viewModel.getBillAmount(),
                 onValueChange = viewModel::onBillAmountChange,
-                isError = viewModel.getErrorValue(),
-                keyboardActionScope = { viewModel.calculateTip() }
+                isError = viewModel.getErrorValue()
             )
             Spacer(modifier = Modifier.height(24.dp))
             CustomTip(
-                onTipChange = viewModel::onTipAmountChange,
+                onTipChange = viewModel::onTipPercentChange,
                 tipPercentage = viewModel.getTipPercentValue(),
                 onSwitchToggled = viewModel::onSwitchToggled,
-                isSwitchToggled = viewModel.getSwitchToggleValue()
+                isSwitchToggled = viewModel.getSwitchToggleValue(),
+                keyboardActionScope = { viewModel.calculateTip() }
             )
             Spacer(modifier = Modifier.height(12.dp))
             TipAmount(tipTotal = viewModel.getTipAmount())
@@ -69,7 +73,7 @@ fun PreviewCalculator() {
         override fun getErrorValue(): MutableState<Boolean> = mutableStateOf(false)
 
         override fun onBillAmountChange(onValueChange: String) {}
-        override fun onTipAmountChange(onValueChange: String) {}
+        override fun onTipPercentChange(onValueChange: String) {}
 
         override fun getTipPercentValue(): MutableState<String> = mutableStateOf("0%")
 

@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardActionScope
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -28,7 +27,6 @@ fun BillAmount(
     errorText: String = stringResource(id = R.string.error),
     isError: MutableState<Boolean>,
     onValueChange: (String) -> Unit,
-    keyboardActionScope: KeyboardActionScope.() -> Unit,
     value: MutableState<String>
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -39,14 +37,13 @@ fun BillAmount(
             value = value.value,
             onValueChange = { onValueChange(it) },
             keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Done
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Next
             ),
             colors = TextFieldDefaults.colors(
                 focusedTextColor = Color.Black,
                 unfocusedTextColor = Color.LightGray
-            ),
-            keyboardActions = KeyboardActions(onDone = keyboardActionScope)
+            )
         )
         if (isError.value) {
             Text(
@@ -67,7 +64,6 @@ fun PreviewTextField() {
         errorText = "Value must be a number",
         isError = remember { mutableStateOf(false) },
         value = remember { mutableStateOf("Bill Amount") },
-        onValueChange = {},
-        keyboardActionScope = {}
+        onValueChange = {}
     )
 }
