@@ -13,10 +13,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -25,7 +24,9 @@ import com.tutorial.tiptime.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainPage(
-    viewModel: TipCalculatorViewModel
+    mainPageViewModel: MainPageViewModel,
+    billAmountViewModel: State,
+    customTipViewModel: State
 ) {
 
     Scaffold(
@@ -34,29 +35,27 @@ fun MainPage(
             .padding()
             .verticalScroll(rememberScrollState())
     ) {
-        Column(
-            modifier = Modifier
-                .padding(it)
-                .padding(horizontal = 32.dp)
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            BillAmount(
-                value = viewModel.getBillAmount(),
-                onValueChange = viewModel::onBillAmountChange,
-                isError = viewModel.getErrorValue()
-            )
-            Spacer(modifier = Modifier.height(24.dp))
-            CustomTip(
-                onTipChange = viewModel::onTipPercentChange,
-                tipPercentage = viewModel.getTipPercentValue(),
-                onSwitchToggled = viewModel::onSwitchToggled,
-                isSwitchToggled = viewModel.getSwitchToggleValue(),
-                keyboardActionScope = { viewModel.calculateTip() }
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            TipAmount(tipTotal = viewModel.getTipAmount())
+        paddingValues ->
+            Column(
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .padding(horizontal = 32.dp)
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                BillAmount(viewModel = billAmountViewModel)
+                Spacer(modifier = Modifier.height(24.dp))
+                CustomTip(
+                    viewModel = customTipViewModel,
+                    keyboardActionScope = { mainPageViewModel.calculateTip(
+                        billAmount = billAmountViewModel.getMutableTextFieldValue(),
+                        tipPercent = customTipViewModel.getMutableTextFieldValue(),
+                        isTipRoundedUp = customTipViewModel.getSwitchValue()
+                    ) }
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                TipAmount(tipTotal = mainPageViewModel.getTipAmount())
         }
     }
 }
@@ -64,22 +63,32 @@ fun MainPage(
 @Composable
 @Preview(showSystemUi = true)
 fun PreviewCalculator() {
-    val viewModel = object : TipCalculatorViewModel {
-        override fun getBillAmount(): MutableState<String> = mutableStateOf("Bill Amount")
+    val viewModel = object : MainPageViewModel {
+        override fun roundUpTip(isTrue: Boolean) {}
 
-        override fun getTipAmount(): MutableState<String> = mutableStateOf("0.34")
+        override fun calculateTip(billAmount: String, tipPercent: String, isTipRoundedUp: Boolean) {}
 
-        override fun calculateTip() {}
-        override fun getErrorValue(): MutableState<Boolean> = mutableStateOf(false)
-
-        override fun onBillAmountChange(onValueChange: String) {}
-        override fun onTipPercentChange(onValueChange: String) {}
-
-        override fun getTipPercentValue(): MutableState<String> = mutableStateOf("0%")
-
-        override fun onSwitchToggled(toggleValue: Boolean) {}
-
-        override fun getSwitchToggleValue(): MutableState<Boolean> = mutableStateOf(false)
+        override fun getTipAmount(): String = "2.34"
     }
-    MainPage(viewModel = viewModel)
+    val state = object : State {
+        override fun onTextFieldValueChange(updatedValue: String) {}
+
+        override fun getMutableTextFieldValue(): String = ""
+
+        override fun isUserInputValid(onFocusStateChanged: FocusState) {}
+
+        override fun getErrorValue(): Boolean = false
+
+        override fun inCreaseFocusCount() {}
+
+        override fun getSwitchValue(): Boolean = false
+
+        override fun onSwitchValueChange(switchValue: Boolean) {}
+
+    }
+    MainPage(
+        mainPageViewModel = viewModel,
+        billAmountViewModel = state,
+        customTipViewModel = state
+    )
 }

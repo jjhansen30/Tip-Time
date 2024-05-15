@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -18,7 +17,7 @@ import com.tutorial.tiptime.R
 
 @Composable
 fun TipAmount(
-    tipTotal: MutableState<String>,
+    tipTotal: String,
     tipAmountFontSize: TextUnit = 32.sp
 ) {
     Row(
@@ -31,7 +30,7 @@ fun TipAmount(
             fontWeight = FontWeight.Bold
         )
         Text(
-            text = "$" + tipTotal.value,
+            text = "$$tipTotal",
             fontSize = tipAmountFontSize,
             fontWeight = FontWeight.Bold
         )
@@ -41,5 +40,5 @@ fun TipAmount(
 @Preview(showBackground = true)
 @Composable
 fun PreviewTipAmount() {
-    TipAmount(tipTotal = remember { mutableStateOf("0.23") })
+    TipAmount(tipTotal = "0.23")
 }

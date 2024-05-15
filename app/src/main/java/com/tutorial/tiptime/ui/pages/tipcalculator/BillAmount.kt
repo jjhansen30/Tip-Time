@@ -4,16 +4,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -25,17 +22,21 @@ import com.tutorial.tiptime.R
 @Composable
 fun BillAmount(
     errorText: String = stringResource(id = R.string.error),
-    isError: MutableState<Boolean>,
-    onValueChange: (String) -> Unit,
-    value: MutableState<String>
+    viewModel: State
 ) {
+
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(text = stringResource(id = R.string.calculate_tip))
         Spacer(modifier = Modifier.height(12.dp))
         TextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = value.value,
-            onValueChange = { onValueChange(it) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .onFocusChanged { focusState ->
+                    viewModel.inCreaseFocusCount()
+                    viewModel.isUserInputValid(focusState)
+                },
+            value = viewModel.getMutableTextFieldValue(),
+            onValueChange = { viewModel.onTextFieldValueChange(it) },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Next
@@ -45,7 +46,7 @@ fun BillAmount(
                 unfocusedTextColor = Color.LightGray
             )
         )
-        if (isError.value) {
+        if (viewModel.getErrorValue()) {
             Text(
                 modifier = Modifier,
                 text = errorText,
@@ -61,9 +62,7 @@ fun BillAmount(
 fun PreviewTextField() {
 
     BillAmount(
-        errorText = "Value must be a number",
-        isError = remember { mutableStateOf(false) },
-        value = remember { mutableStateOf("Bill Amount") },
-        onValueChange = {}
+        viewModel = BillAmountViewModel(),
+        errorText = "Value must be a number"
     )
 }
