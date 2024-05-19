@@ -20,6 +20,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.tutorial.tiptime.R
@@ -38,31 +39,36 @@ fun MainPage(
         modifier = Modifier
             .padding()
             .verticalScroll(rememberScrollState())
-    ) {
-        paddingValues ->
-            Column(
-                modifier = Modifier
-                    .padding(paddingValues)
-                    .padding(horizontal = 32.dp)
-                    .fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                BillAmount(
-                    viewModel = billAmountViewModel,
-                    focusRequester = focusRequester.Default
-                )
-                Spacer(modifier = Modifier.height(24.dp))
-                CustomTip(
-                    viewModel = customTipViewModel,
-                    keyboardActionScope = { mainPageViewModel.calculateTip(
-                        billAmount = billAmountViewModel.getTextFieldValue(),
-                        tipPercent = customTipViewModel.getTextFieldValue(),
-                        isTipRoundedUp = customTipViewModel.getSwitchValue()
-                    ) }
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-                TipAmount(tipTotal = mainPageViewModel.getTipAmount())
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .padding(paddingValues)
+                .padding(horizontal = 32.dp)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            BillAmount(
+                viewModel = billAmountViewModel,
+                focusRequester = focusRequester.Default
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+            CustomTip(
+                viewModel = customTipViewModel,
+                keyboardActionScope = {
+                    customTipViewModel.onKeyboardButtonPress()
+                    if (customTipViewModel.getIsInputValid()) {
+                        mainPageViewModel.calculateTip(
+                            billAmount = billAmountViewModel.getTextFieldValue(),
+                            tipPercent = customTipViewModel.getTextFieldValue(),
+                            isTipRoundedUp = customTipViewModel.getSwitchValue()
+                        )
+                        this.defaultKeyboardAction(imeAction = ImeAction.Done)
+                    }
+                }
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            TipAmount(tipTotal = mainPageViewModel.getTipAmount())
         }
     }
 }
@@ -73,7 +79,12 @@ fun PreviewCalculator() {
     val viewModel = object : MainPageViewModel {
         override fun roundUpTip(isTrue: Boolean) {}
 
-        override fun calculateTip(billAmount: String, tipPercent: String, isTipRoundedUp: Boolean) {}
+        override fun calculateTip(
+            billAmount: String,
+            tipPercent: String,
+            isTipRoundedUp: Boolean
+        ) {
+        }
 
         override fun getTipAmount(): String = "2.34"
     }
@@ -89,15 +100,14 @@ fun PreviewCalculator() {
         override fun inCreaseFocusCount() {}
 
         override fun getSwitchValue(): Boolean = false
-        override fun getTextFieldFontColor(): Color {
-            TODO("Not yet implemented")
-        }
+
+        override fun getTextFieldFontColor(): Color = Color.LightGray
 
         override fun onSwitchValueChange(switchValue: Boolean) {}
+
         override fun onFocusStateChange(focusState: FocusState) {}
-        override fun onKeyboardButtonPress() {
-            TODO("Not yet implemented")
-        }
+
+        override fun onKeyboardButtonPress() {}
 
     }
     MainPage(

@@ -1,5 +1,6 @@
 package com.tutorial.tiptime.ui.pages.tipcalculator
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -15,7 +16,7 @@ class CustomTipViewModel : State, ViewModel() {
     private var isInputValid: MutableState<Boolean> = mutableStateOf(true)
     private var isFocused: MutableState<Boolean> = mutableStateOf(false)
     private var unFocussedFontColor: MutableState<Color> = mutableStateOf(Color.LightGray)
-		private var isRoundedUp: MutableState<Boolean> = mutableStateOf(false)
+    private var isRoundedUp: MutableState<Boolean> = mutableStateOf(false)
 
     override fun onTextFieldValueChange(newValue: String) {
         tipPercentage.value = newValue
@@ -27,7 +28,7 @@ class CustomTipViewModel : State, ViewModel() {
 
     override fun isUserInputValid(onFocusStateChanged: FocusState) {
         if (!onFocusStateChanged.isFocused && focusCount.value >= State.FOCUS_COUNT_LIMIT) {
-            if (!tipPercentage.value.isDigitsOnly() || billAmount.value.isEmpty()) {
+            if (!tipPercentage.value.isDigitsOnly() || tipPercentage.value.isEmpty()) {
                 tipPercentage.value = State.BLANK_STRING
                 isInputValid.value = true
             } else {
@@ -44,10 +45,12 @@ class CustomTipViewModel : State, ViewModel() {
         focusCount.value += 1
     }
 
-    override fun getSwitchValue(): Boolean = false
+    override fun getSwitchValue(): Boolean {
+        return isRoundedUp.value
+    }
 
     override fun onSwitchValueChange(switchValue: Boolean) {
-        isRoundedUp.value = !isRoundedUp.value
+        isRoundedUp.value = switchValue
     }
 
     override fun onFocusStateChange(focusState: FocusState) {

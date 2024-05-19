@@ -42,7 +42,7 @@ class MainPageViewModelImplementation : MainPageViewModel, ViewModel() {
     override fun roundUpTip(isTrue: Boolean) {
         if (isTrue) {
             val roundUpValue = ceil(tip.value.toFloat())
-            tip.value = roundUpValue.toString()
+            tip.value = "${roundUpValue}0"
         }
     }
 

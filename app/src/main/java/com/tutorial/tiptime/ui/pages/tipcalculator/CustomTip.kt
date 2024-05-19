@@ -16,6 +16,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -26,17 +27,20 @@ import com.tutorial.tiptime.R
 
 @Composable
 fun CustomTip(
+    inputErrorText: String = stringResource(id = R.string.error),
     keyboardActionScope: KeyboardActionScope.() -> Unit,
     viewModel: State
 ) {
     Column {
         TextField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .onFocusChanged { viewModel.onFocusStateChange(it) }
+                .fillMaxWidth(),
             value =viewModel.getTextFieldValue(),
-            onValueChange = { viewModel.onTextFieldValueChange(it) },
+            onValueChange = viewModel::onTextFieldValueChange,
             colors = TextFieldDefaults.colors(
                 focusedTextColor = Color.Black,
-                unfocusedTextColor = Color.LightGray
+                unfocusedTextColor = viewModel.getTextFieldFontColor()
             ),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Decimal,
@@ -44,6 +48,13 @@ fun CustomTip(
             ),
             keyboardActions = KeyboardActions(onDone = keyboardActionScope)
         )
+        if (!viewModel.getIsInputValid()) {
+            Text(
+                modifier = Modifier,
+                text = inputErrorText,
+                color = Color.Red
+            )
+        }
         Spacer(modifier = Modifier.height(28.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
