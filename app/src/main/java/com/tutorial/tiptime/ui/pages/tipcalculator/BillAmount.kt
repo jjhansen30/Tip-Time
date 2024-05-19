@@ -39,22 +39,21 @@ fun BillAmount(
                     viewModel.onFocusStateChange(it)
                 }
                 .focusRequester(focusRequester),
-            value = viewModel.getMutableTextFieldValue(),
+            value = viewModel.getTextFieldValue(),
             onValueChange = { viewModel.onTextFieldValueChange(it) },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Next
             ),
-//            keyboardActions = KeyboardActions(onNext = {
-//                if (viewModel.getIsInputValid()) {
-//                    focusRequester.captureFocus()
-//                } else {
-//                    focusRequester.freeFocus()
-//                }
-//            }),
+            keyboardActions = KeyboardActions(onNext = {
+                viewModel.onKeyboardButtonPress()
+                if (viewModel.getIsInputValid()) {
+                    this.defaultKeyboardAction(imeAction = ImeAction.Next)
+                }
+            }),
             colors = TextFieldDefaults.colors(
                 focusedTextColor = Color.Black,
-                unfocusedTextColor = viewModel.getTextFieldFontcolor()
+                unfocusedTextColor = viewModel.getTextFieldFontColor()
             )
         )
         if (!viewModel.getIsInputValid()) {

@@ -1,5 +1,7 @@
 package com.tutorial.tiptime.ui.pages.tipcalculator
 
+import android.util.Log
+import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -12,24 +14,15 @@ class BillAmountViewModel : State, ViewModel() {
 
     private var focusCount: MutableState<Int> = mutableIntStateOf(State.ZERO)
     private var billAmount: MutableState<String> = mutableStateOf(BILL_AMOUNT)
-    private var isInputValid: MutableState<Boolean> = mutableStateOf(false)
+    private var isInputValid: MutableState<Boolean> = mutableStateOf(true)
     private var isFocused: MutableState<Boolean> = mutableStateOf(false)
     private var unFocussedFontColor: MutableState<Color> = mutableStateOf(Color.LightGray)
 
     override fun onTextFieldValueChange(newValue: String) {
         billAmount.value = newValue
-//        if (!isFocusCaptured.value){
-//            try {
-//                val textValue = newValue.toFloat()
-//                billAmount.value = textValue.toString()
-//            }catch (e: Exception) {
-//                Log.e(TAG, "${e.message}")
-//                isInputValid.value = false
-//            }
-//        }
     }
 
-    override fun getMutableTextFieldValue(): String {
+    override fun getTextFieldValue(): String {
         return billAmount.value
     }
 
@@ -66,7 +59,17 @@ class BillAmountViewModel : State, ViewModel() {
         isFocused.value = focusState.isFocused
     }
 
-    override fun getTextFieldFontcolor(): Color {
+    override fun onKeyboardButtonPress() {
+        try {
+            billAmount.value.toFloat()
+            isInputValid.value = true
+        } catch (e: Exception) {
+            Log.e(TAG, "${e.message}")
+            isInputValid.value = false
+        }
+    }
+
+    override fun getTextFieldFontColor(): Color {
         return unFocussedFontColor.value
     }
 

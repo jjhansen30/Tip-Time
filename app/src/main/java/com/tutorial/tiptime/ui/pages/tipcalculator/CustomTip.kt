@@ -32,7 +32,7 @@ fun CustomTip(
     Column {
         TextField(
             modifier = Modifier.fillMaxWidth(),
-            value =viewModel.getMutableTextFieldValue(),
+            value =viewModel.getTextFieldValue(),
             onValueChange = { viewModel.onTextFieldValueChange(it) },
             colors = TextFieldDefaults.colors(
                 focusedTextColor = Color.Black,

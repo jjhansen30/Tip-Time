@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.FocusState
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -55,8 +56,8 @@ fun MainPage(
                 CustomTip(
                     viewModel = customTipViewModel,
                     keyboardActionScope = { mainPageViewModel.calculateTip(
-                        billAmount = billAmountViewModel.getMutableTextFieldValue(),
-                        tipPercent = customTipViewModel.getMutableTextFieldValue(),
+                        billAmount = billAmountViewModel.getTextFieldValue(),
+                        tipPercent = customTipViewModel.getTextFieldValue(),
                         isTipRoundedUp = customTipViewModel.getSwitchValue()
                     ) }
                 )
@@ -79,7 +80,7 @@ fun PreviewCalculator() {
     val state = object : State {
         override fun onTextFieldValueChange(newValue: String) {}
 
-        override fun getMutableTextFieldValue(): String = ""
+        override fun getTextFieldValue(): String = ""
 
         override fun isUserInputValid(onFocusStateChanged: FocusState) {}
 
@@ -88,9 +89,15 @@ fun PreviewCalculator() {
         override fun inCreaseFocusCount() {}
 
         override fun getSwitchValue(): Boolean = false
+        override fun getTextFieldFontColor(): Color {
+            TODO("Not yet implemented")
+        }
 
         override fun onSwitchValueChange(switchValue: Boolean) {}
         override fun onFocusStateChange(focusState: FocusState) {}
+        override fun onKeyboardButtonPress() {
+            TODO("Not yet implemented")
+        }
 
     }
     MainPage(

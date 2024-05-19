@@ -19,7 +19,7 @@ class CustomTipViewModel : State, ViewModel() {
         tipPercent.value = newValue
     }
 
-    override fun getMutableTextFieldValue(): String {
+    override fun getTextFieldValue(): String {
         return tipPercent.value
     }
 
@@ -54,7 +54,11 @@ class CustomTipViewModel : State, ViewModel() {
         TODO("Not yet implemented")
     }
 
-    override fun getTextFieldFontcolor(): Color {
+    override fun onKeyboardButtonPress() {
+        TODO("Not yet implemented")
+    }
+
+    override fun getTextFieldFontColor(): Color {
         TODO("Not yet implemented")
     }
 }
