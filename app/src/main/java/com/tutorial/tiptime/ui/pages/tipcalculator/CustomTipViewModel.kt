@@ -73,7 +73,7 @@ class CustomTipViewModel : State, ViewModel() {
     }
 
     companion object {
-        const val TAG = "BillAmountViewModel"
+        const val TAG = "CustomTipViewModel"
         const val BILL_AMOUNT = "Bill Amount"
     }
 }
