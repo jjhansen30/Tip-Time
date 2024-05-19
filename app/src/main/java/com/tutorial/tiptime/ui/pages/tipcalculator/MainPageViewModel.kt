@@ -13,10 +13,11 @@ interface MainPageViewModel {
         tipPercent: String,
         isTipRoundedUp: Boolean
     )
+
     fun getTipAmount(): String
 }
 
-class MainPageViewModelImplementation: MainPageViewModel, ViewModel() {
+class MainPageViewModelImplementation : MainPageViewModel, ViewModel() {
 
     private var tip = mutableStateOf("")
 
@@ -25,6 +26,7 @@ class MainPageViewModelImplementation: MainPageViewModel, ViewModel() {
         tipPercent: String,
         isTipRoundedUp: Boolean
     ) {
+
         tip.value = String.format(
             locale = Locale.ENGLISH,
             format = PERCENT_FORMAT,
@@ -43,6 +45,7 @@ class MainPageViewModelImplementation: MainPageViewModel, ViewModel() {
             tip.value = roundUpValue.toString()
         }
     }
+
     companion object {
         const val PERCENT_FORMAT = "%.2f"
     }

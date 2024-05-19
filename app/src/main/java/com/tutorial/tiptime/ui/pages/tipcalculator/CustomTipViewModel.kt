@@ -4,6 +4,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.focus.FocusState
+import androidx.compose.ui.graphics.Color
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModel
 
@@ -14,8 +15,8 @@ class CustomTipViewModel : State, ViewModel() {
     private var isTipPercentError: MutableState<Boolean> = mutableStateOf(false)
     private var isRoundUpTip: MutableState<Boolean> = mutableStateOf(false)
 
-    override fun onTextFieldValueChange(updatedValue: String) {
-        tipPercent.value = updatedValue
+    override fun onTextFieldValueChange(newValue: String) {
+        tipPercent.value = newValue
     }
 
     override fun getMutableTextFieldValue(): String {
@@ -33,7 +34,7 @@ class CustomTipViewModel : State, ViewModel() {
         }
     }
 
-    override fun getErrorValue(): Boolean {
+    override fun getIsInputValid(): Boolean {
         return isTipPercentError.value
     }
 
@@ -47,5 +48,13 @@ class CustomTipViewModel : State, ViewModel() {
 
     override fun onSwitchValueChange(switchValue: Boolean) {
         isRoundUpTip.value = switchValue
+    }
+
+    override fun onFocusStateChange(focusState: FocusState) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getTextFieldFontcolor(): Color {
+        TODO("Not yet implemented")
     }
 }

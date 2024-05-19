@@ -13,8 +13,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,6 +30,7 @@ fun MainPage(
     billAmountViewModel: State,
     customTipViewModel: State
 ) {
+    val focusRequester = remember { FocusRequester }
 
     Scaffold(
         topBar = { TopAppBar(title = { Text(text = stringResource(id = R.string.app_name)) }) },
@@ -44,7 +47,10 @@ fun MainPage(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                BillAmount(viewModel = billAmountViewModel)
+                BillAmount(
+                    viewModel = billAmountViewModel,
+                    focusRequester = focusRequester.Default
+                )
                 Spacer(modifier = Modifier.height(24.dp))
                 CustomTip(
                     viewModel = customTipViewModel,
@@ -71,19 +77,20 @@ fun PreviewCalculator() {
         override fun getTipAmount(): String = "2.34"
     }
     val state = object : State {
-        override fun onTextFieldValueChange(updatedValue: String) {}
+        override fun onTextFieldValueChange(newValue: String) {}
 
         override fun getMutableTextFieldValue(): String = ""
 
         override fun isUserInputValid(onFocusStateChanged: FocusState) {}
 
-        override fun getErrorValue(): Boolean = false
+        override fun getIsInputValid(): Boolean = false
 
         override fun inCreaseFocusCount() {}
 
         override fun getSwitchValue(): Boolean = false
 
         override fun onSwitchValueChange(switchValue: Boolean) {}
+        override fun onFocusStateChange(focusState: FocusState) {}
 
     }
     MainPage(
