@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModel
 class CustomTipViewModel : State, ViewModel() {
 
     private var focusCount: MutableState<Int> = mutableIntStateOf(State.ZERO)
-    private var tipPercentage: MutableState<String> = mutableStateOf(BILL_AMOUNT)
+    private var tipPercentage: MutableState<String> = mutableStateOf(TIP_PERCENTAGE)
     private var isInputValid: MutableState<Boolean> = mutableStateOf(true)
     private var isFocused: MutableState<Boolean> = mutableStateOf(false)
     private var unFocussedFontColor: MutableState<Color> = mutableStateOf(Color.LightGray)
@@ -74,6 +74,6 @@ class CustomTipViewModel : State, ViewModel() {
 
     companion object {
         const val TAG = "CustomTipViewModel"
-        const val BILL_AMOUNT = "Bill Amount"
+        const val TIP_PERCENTAGE = "Tip Percentage"
     }
 }
