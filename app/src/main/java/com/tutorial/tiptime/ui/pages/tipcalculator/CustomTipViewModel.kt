@@ -10,55 +10,70 @@ import androidx.lifecycle.ViewModel
 
 class CustomTipViewModel : State, ViewModel() {
 
-    private var tipPercent: MutableState<String> = mutableStateOf(State.BLANK_STRING)
     private var focusCount: MutableState<Int> = mutableIntStateOf(State.ZERO)
-    private var isTipPercentError: MutableState<Boolean> = mutableStateOf(false)
-    private var isRoundUpTip: MutableState<Boolean> = mutableStateOf(false)
+    private var tipPercentage: MutableState<String> = mutableStateOf(BILL_AMOUNT)
+    private var isInputValid: MutableState<Boolean> = mutableStateOf(true)
+    private var isFocused: MutableState<Boolean> = mutableStateOf(false)
+    private var unFocussedFontColor: MutableState<Color> = mutableStateOf(Color.LightGray)
+		private var isRoundedUp: MutableState<Boolean> = mutableStateOf(false)
 
     override fun onTextFieldValueChange(newValue: String) {
-        tipPercent.value = newValue
+        tipPercentage.value = newValue
     }
 
     override fun getTextFieldValue(): String {
-        return tipPercent.value
+        return tipPercentage.value
     }
 
     override fun isUserInputValid(onFocusStateChanged: FocusState) {
         if (!onFocusStateChanged.isFocused && focusCount.value >= State.FOCUS_COUNT_LIMIT) {
-            if (!tipPercent.value.isDigitsOnly() || tipPercent.value.isEmpty()) {
-                tipPercent.value = State.BLANK_STRING
-                isTipPercentError.value = true
+            if (!tipPercentage.value.isDigitsOnly() || billAmount.value.isEmpty()) {
+                tipPercentage.value = State.BLANK_STRING
+                isInputValid.value = true
             } else {
-                isTipPercentError.value = false
+                isInputValid.value = false
             }
         }
     }
 
     override fun getIsInputValid(): Boolean {
-        return isTipPercentError.value
+        return isInputValid.value
     }
 
     override fun inCreaseFocusCount() {
         focusCount.value += 1
     }
 
-    override fun getSwitchValue(): Boolean {
-        return isRoundUpTip.value
-    }
+    override fun getSwitchValue(): Boolean = false
 
     override fun onSwitchValueChange(switchValue: Boolean) {
-        isRoundUpTip.value = switchValue
+        isRoundedUp.value = !isRoundedUp.value
     }
 
     override fun onFocusStateChange(focusState: FocusState) {
-        TODO("Not yet implemented")
+        if (focusState.isFocused && focusCount.value <= 2) {
+            tipPercentage.value = State.BLANK_STRING
+            unFocussedFontColor.value = Color.Black
+        }
+        isFocused.value = focusState.isFocused
     }
 
     override fun onKeyboardButtonPress() {
-        TODO("Not yet implemented")
+        try {
+            tipPercentage.value.toFloat()
+            isInputValid.value = true
+        } catch (e: Exception) {
+            Log.e(TAG, "${e.message}")
+            isInputValid.value = false
+        }
     }
 
     override fun getTextFieldFontColor(): Color {
-        TODO("Not yet implemented")
+        return unFocussedFontColor.value
+    }
+
+    companion object {
+        const val TAG = "BillAmountViewModel"
+        const val BILL_AMOUNT = "Bill Amount"
     }
 }
